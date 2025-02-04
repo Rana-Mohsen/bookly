@@ -1,3 +1,4 @@
+import 'package:bookly/core/utils/function/launch_url.dart';
 import 'package:bookly/features/home/data/models/book_model/book_model.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +28,7 @@ class BooksAction extends StatelessWidget {
           Expanded(
               child: CustomButton(
             onPressed: () {
-            // launchCustomUr(context, 'bookModel.volumeInfo.previewLink');
+            launchCustomUr(context, 'bookModel.volumeInfo.previewLink');
             },
             fontSize: 16,
             text: "boook",
