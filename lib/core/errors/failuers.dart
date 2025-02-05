@@ -6,11 +6,10 @@ abstract class Failuers {
   const Failuers(this.errMessage);
 }
 
-class ServerFailure extends  Failuers {
+class ServerFailure extends Failuers {
   ServerFailure(super.errMessage);
 
   factory ServerFailure.fromDioError(DioException dioExp) {
-    
     switch (dioExp.type) {
       case DioExceptionType.connectionTimeout:
         return ServerFailure('Connection timeout with ApiServer');
@@ -22,21 +21,21 @@ class ServerFailure extends  Failuers {
         return ServerFailure('Receive timeout with ApiServer');
 
       case DioExceptionType.badResponse:
+        print("1");
         return ServerFailure.fromResponse(
             dioExp.response!.statusCode, dioExp.response!.data);
       case DioExceptionType.cancel:
         return ServerFailure('Request to ApiServer was canceld');
 
+      case DioExceptionType.connectionError:
+        return ServerFailure('No Internet Connection');
       case DioExceptionType.unknown:
-        if (dioExp.message!.contains('SocketException')) {
-          return ServerFailure('No Internet Connection');
-        }
         return ServerFailure('Unexpected Error, Please try again!');
       default:
         return ServerFailure('Opps There was an Error, Please try again');
     }
   }
-   factory ServerFailure.fromResponse(int? statusCode, dynamic response) {
+  factory ServerFailure.fromResponse(int? statusCode, dynamic response) {
     if (statusCode == 400 || statusCode == 401 || statusCode == 403) {
       return ServerFailure(response['error']['message']);
     } else if (statusCode == 404) {
