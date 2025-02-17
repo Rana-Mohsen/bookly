@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:bookly/core/errors/failuers.dart';
 import 'package:bookly/features/home/data/models/book_model/book_model.dart';
 import 'package:bookly/features/home/data/repos/home_repo.dart';
 import 'package:bookly/features/home/presentation/manager/featured_books_cubit/featured_books_cubit.dart';
@@ -17,9 +18,7 @@ void main() {
     mockHomeRepo = MockHomeRepo();
     featuredBooksCubit = FeaturedBooksCubit(mockHomeRepo);
   });
-  tearDown(
-    () => featuredBooksCubit.close()
-  );
+  tearDown(() => featuredBooksCubit.close());
   group("test featured books cubit class", () {
     blocTest<FeaturedBooksCubit, FeaturedBooksState>(
       'emits [FeaturedBooksLoading, FeaturedBooksSuccess] when FeaturedBooksCubit is added.',
@@ -32,6 +31,21 @@ void main() {
       expect: () => <FeaturedBooksState>[
         FeaturedBooksLoading(),
         const FeaturedBooksSuccess(<BookModel>[])
+      ],
+    );
+
+    blocTest<FeaturedBooksCubit, FeaturedBooksState>(
+      'emits [FeaturedBooksLoading, FeaturedBooksFailure] when FeaturedBooksCubit is added.',
+      build: () {
+        when(mockHomeRepo.fetchFeaturedBooks()).thenAnswer(
+          (realInvocation) async => Left(ServerFailure("something went wrong")),
+        );
+        return featuredBooksCubit;
+      },
+      act: (cubit) => cubit.fetchFeaturedBooks(),
+      expect: () => <FeaturedBooksState>[
+        FeaturedBooksLoading(),
+        const FeaturedBooksFailuer("something went wrong")
       ],
     );
   });
