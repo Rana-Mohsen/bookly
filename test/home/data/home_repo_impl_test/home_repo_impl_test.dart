@@ -43,7 +43,8 @@ void main() {
         });
       });
 
-      test('given [home repo] class when [fetchBestSellerBooks] function is called then return [ServerFailuer from DioError]: ',
+      test(
+          'given [home repo] class when [fetchBestSellerBooks] function is called then return [ServerFailuer from DioError]: ',
           () async {
         when(mockApiService.get(endpoint: endpoint)).thenThrow(
           DioException(
@@ -61,7 +62,9 @@ void main() {
         );
       });
 
-      test('given [home repo] class when [fetchBestSellerBooks] function is called then return [ServerFailuer]: ', () async {
+      test(
+          'given [home repo] class when [fetchBestSellerBooks] function is called then return [ServerFailuer]: ',
+          () async {
         when(mockApiService.get(endpoint: endpoint)).thenThrow(
           Exception('Unexpected error'),
         );
